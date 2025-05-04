@@ -1,17 +1,20 @@
 #ifndef _KERN_FS_STAT_H_
 #define _KERN_FS_STAT_H_
 
-#define T_DIR  1   // Directory
-#define T_FILE 2   // File
-#define T_DEV  3   // Device
+#ifdef _KERN_
 
-//#include <lib/types.h>
+#define T_DIR  1  // Directory
+#define T_FILE 2  // File
+#define T_DEV  3  // Device
+
 struct file_stat {
-  int16_t type;    // Type of file
-  uint32_t dev;    // File system's disk device
-  uint32_t ino;    // Inode number
-  uint16_t nlink;  // Number of links to file
-  size_t size;     // Size of file in bytes
+    int16_t type;    // Type of file
+    uint32_t dev;    // File system's disk device
+    uint32_t ino;    // Inode number
+    uint16_t nlink;  // Number of links to file
+    size_t size;     // Size of file in bytes
 };
 
-#endif /* !_KERN_FS_STAT_H_ */
+#endif  /* _KERN_ */
+
+#endif  /* !_KERN_FS_STAT_H_ */

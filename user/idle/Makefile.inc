@@ -1,18 +1,20 @@
 # -*-Makefile-*-
 
-OBJDIRS		+= $(USER_OBJDIR)/idle
+OBJDIRS += $(USER_OBJDIR)/idle
 
-USER_IDLE_SRC	+= $(USER_DIR)/idle/idle.c
-USER_IDLE_OBJ	:= $(patsubst %.c, $(OBJDIR)/%.o, $(USER_IDLE_SRC))
-USER_IDLE_OBJ	:= $(patsubst %.S, $(OBJDIR)/%.o, $(USER_IDLE_OBJ))
+USER_IDLE_SRC += $(USER_DIR)/idle/idle.c
+USER_IDLE_OBJ := $(patsubst %.c, $(OBJDIR)/%.o, $(USER_IDLE_SRC))
+USER_IDLE_OBJ := $(patsubst %.S, $(OBJDIR)/%.o, $(USER_IDLE_OBJ))
 
-KERN_BINFILES	+= $(USER_OBJDIR)/idle/idle
+KERN_BINFILES += $(USER_OBJDIR)/idle/idle
 
 idle: $(USER_OBJDIR)/idle/idle
 
 $(USER_OBJDIR)/idle/idle: $(USER_LIB_OBJ) $(USER_IDLE_OBJ)
 	@echo + ld[USER/idle] $@
 	$(V)$(LD) -o $@ $(USER_LDFLAGS) $(USER_LIB_OBJ) $(USER_IDLE_OBJ) $(GCC_LIBS)
+	mv $@ $@.bak
+	$(V)$(OBJCOPY) --remove-section .note.gnu.property $@.bak $@
 	$(V)$(OBJDUMP) -S $@ > $@.asm
 	$(V)$(NM) -n $@ > $@.sym
 

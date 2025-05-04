@@ -9,7 +9,6 @@ void sys_yield(tf_t *tf);
 void sys_produce(tf_t *tf);
 void sys_consume(tf_t *tf);
 
-#endif /* _KERN_ */
+#endif  /* _KERN_ */
 
-#endif /* !_KERN_TRAP_TSYSCALL_H_ */
-
+#endif  /* !_KERN_TRAP_TSYSCALL_H_ */

@@ -1,4 +1,4 @@
-// On-disk file system format. 
+// On-disk file system format.
 
 // Block 0 is unused.
 // Block 1 is super block.
@@ -10,27 +10,33 @@
 #ifndef _KERN_FS_FILE_H_
 #define _KERN_FS_FILE_H_
 
+#ifdef _KERN_
+
 #include "stat.h"
 #include "inode.h"
 
 struct file {
-  enum { FD_NONE, FD_PIPE, FD_INODE } type;
-  int ref; // reference count
-  int8_t readable;
-  int8_t writable;
-  struct inode *ip;
-  uint32_t off;
+    enum { FD_NONE, FD_PIPE, FD_INODE } type;
+    int ref;  // reference count
+    int8_t readable;
+    int8_t writable;
+    struct inode *ip;
+    uint32_t off;
+    bool holding_flock;
 };
 
 void file_init(void);
 
+// Lock the file.
+int file_flock(struct file *f, int operation);
+
 // Allocate a file structure.
-struct file* file_alloc(void);
+struct file *file_alloc(void);
 
 // Increment ref count for file f.
-struct file* file_dup(struct file *f);
+struct file *file_dup(struct file *f);
 
-// Close file f.  (Decrement ref count, close when reaches 0.)
+// Close file f. Decrement ref count, close when reaches 0.
 void file_close(struct file *f);
 
 // Get metadata about file f.
@@ -44,4 +50,6 @@ int file_write(struct file *f, char *addr, int n);
 
 #define CONSOLE 1
 
-#endif /* !_KERN_FS_FILE_H_ */
+#endif  /* _KERN_ */
+
+#endif  /* !_KERN_FS_FILE_H_ */

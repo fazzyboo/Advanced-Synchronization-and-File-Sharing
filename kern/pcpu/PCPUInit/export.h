@@ -5,7 +5,6 @@
 
 void pcpu_init(void);
 
-#endif /* _KERN_ */
+#endif  /* _KERN_ */
 
-#endif /* !_KERN_PCPU_PCPUINIT_H_ */
-
+#endif  /* !_KERN_PCPU_PCPUINIT_H_ */

@@ -7,7 +7,6 @@
 
 void trap_init(unsigned int cpu_idx);
 
-#endif /* _KERN_ */
+#endif  /* _KERN_ */
 
-#endif /* _KERN_TRAP_TTRAPINIT_H_ */
-
+#endif  /* _KERN_TRAP_TTRAPINIT_H_ */

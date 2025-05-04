@@ -5,7 +5,7 @@ KERN_OBJDIR	:= $(OBJDIR)/kern
 
 OBJDIRS		+= $(KERN_OBJDIR)
 
-DEBUG_MSG = 1
+DEBUG_MSG	:= 1
 
 # Arch-independent compiling and linking options
 KERN_CFLAGS	:= $(CFLAGS) -D_KERN_ -I$(KERN_DIR) -I$(KERN_DIR)/kern -I. -m32
@@ -21,7 +21,7 @@ KERN_CFLAGS	+= -O2
 endif
 
 KERN_LDFLAGS	:= $(LDFLAGS) -e start -m elf_i386 -Ttext=0x00100000
-GCC_LIBS        := $(GCC_LIB32)
+GCC_LIBS	:= $(GCC_LIB32)
 
 # Sub-makefiles
 include		$(KERN_DIR)/config.mk
@@ -35,12 +35,15 @@ include		$(KERN_DIR)/thread/Makefile.inc
 include		$(KERN_DIR)/proc/Makefile.inc
 include		$(KERN_DIR)/trap/Makefile.inc
 include		$(KERN_DIR)/fs/Makefile.inc
+include		$(KERN_DIR)/cv/Makefile.inc
+include     $(KERN_DIR)/flock/Makefile.inc
+include     $(KERN_DIR)/bbuffer/Makefile.inc
 
 KERN_CFLAGS	+= $(KERN_DEBUG_FLAGS)
 KERN_CFLAGS	+= -DSERIAL_DEBUG -DDEBUG_MSG
 ifdef ENABLE_CCOMP
 CCOMP_KERN_CFLAGS += $(KERN_DEBUG_FLAGS)
-CLIGHTGEN_FLAGS	  += $(KERN_DEBUG_FLAGS)
+CLIGHTGEN_FLAGS   += $(KERN_DEBUG_FLAGS)
 endif
 
 # Object files of kernel
@@ -51,7 +54,7 @@ KERN_OBJFILES	:= $(patsubst %.S, $(OBJDIR)/%.o, $(KERN_OBJFILES))
 # Targets
 
 kern: $(KERN_OBJFILES) $(KERN_BINFILES)
-	@echo All targets of kernel are compiled.
+	@echo All targets of kernel are done.
 
 link: $(KERN_OBJDIR)/kernel
 
@@ -59,16 +62,7 @@ link: $(KERN_OBJDIR)/kernel
 $(KERN_OBJDIR)/kernel: kern
 	@echo + ld[KERN] $@
 	$(V)$(LD) -o $@ $(KERN_LDFLAGS) $(KERN_OBJFILES) $(GCC_LIBS) -b binary $(KERN_BINFILES)
+	mv $@ $@.bak
+	$(V)$(OBJCOPY) --remove-section .note.gnu.property $@.bak $@
 	$(V)$(OBJDUMP) -S $@ > $@.asm
 	$(V)$(NM) -n $@ > $@.sym
-
-install_kern: $(KERN_OBJDIR)/kernel $(CERTIKOS_IMG)
-	@echo + copy kernel to /boot/kernel
-	$(V)$(UTILSDIR)/mount.sh
-	$(V)sudo mkdir -p /mnt/boot
-	$(V)sudo cp -f $(KERN_OBJDIR)/kernel /mnt/boot/kernel
-	$(V)$(UTILSDIR)/umount.sh
-
-kern_coq: $(KERN_CCOMP_SRC)
-	@echo + clightgen $(KERN_CCOMP_SRC)
-	$(V)$(CLIGHTGEN) $(CLIGHTGEN_FLAGS) $(KERN_CCOMP_SRC)

@@ -5,11 +5,10 @@
 
 #include <lib/trap.h>
 
-void trap (tf_t *);
-void exception_handler(tf_t *);
-void interrupt_handler(tf_t *);
+void trap(tf_t *tf);
+void exception_handler(tf_t *tf);
+void interrupt_handler(tf_t *tf);
 
-#endif /* _KERN_ */
+#endif  /* _KERN_ */
 
-#endif /* !_KERN_TRAP_TTRAPHANDLER_H_ */
-
+#endif  /* !_KERN_TRAP_TTRAPHANDLER_H_ */

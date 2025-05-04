@@ -3,21 +3,16 @@
 
 #include "kstack.h"
 
-uintptr_t*
-get_kstack_pointer(void)
+struct kstack bsp_kstack[NUM_CPUS];
+struct kstack proc_kstack[NUM_IDS];
+
+uintptr_t *get_kstack_pointer(void)
 {
-	struct kstack *ks =
-                (struct kstack *) ROUNDDOWN(get_stack_pointer(), KSTACK_SIZE);
-	
-	return (uintptr_t *) ks;
+    return (uintptr_t *) ROUNDDOWN(read_esp(), KSTACK_SIZE);
 }
 
-
-int 
-get_kstack_cpu_idx(void)
+int get_kstack_cpu_idx(void)
 {
-
-	struct kstack *ks = (struct kstack *) get_kstack_pointer();
-	
-	return ks->cpu_idx;
+    struct kstack *ks = (struct kstack *) get_kstack_pointer();
+    return ks->cpu_idx;
 }

@@ -3,10 +3,9 @@
 
 #ifdef _KERN_
 
-void paging_init(unsigned int);
+void paging_init(unsigned int mbi_addr);
 void paging_init_ap(void);
 
-#endif /* _KERN_ */
+#endif  /* _KERN_ */
 
-#endif /* !_KERN_VMM_MPTINIT_ */
-
+#endif  /* !_KERN_VMM_MPTINIT_H_ */

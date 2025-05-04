@@ -6,7 +6,6 @@
 unsigned int get_curid(void);
 void set_curid(unsigned int curid);
 
-#endif /* _KIERN_ */
+#endif  /* _KERN_ */
 
-#endif /* !_KERN_THREAD_PCURID_ */
-
+#endif  /* !_KERN_THREAD_PCURID_H_ */
